@@ -9,8 +9,14 @@ main{
     display: flex;
     width: 100%;
     background: #FAFAFA;
+    position: relative;
+    justify-content: flex-end;
 }
-
+.sidenav{
+    position: fixed;
+    top: 0;
+    left: 0;
+}
 .content{
     width: 82%;
     display: flex;
@@ -71,19 +77,71 @@ line-height: 24px; /* 150% */
 }
 .maincont{
     display: flex;
-width: 100%;
-padding: 24px;
-flex-direction: column;
-align-items: flex-start;
-gap: 24px;
-flex-shrink: 0;
+    width: 100%;
+    padding: 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
 }
 
 .statcards{
     display: flex;
 align-items: center;
 align-content: center;
-gap: 15px;
+gap: 14px;
 flex-wrap: wrap;
 width: 100%;
+}
+
+.tableheader{
+    display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.tableheader h3{
+    color: #1A1A1A;
+font-family: Outfit;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 27px; /* 150% */
+}
+
+.table{
+    display: flex;
+width: 100%;
+padding: 24px;
+flex-direction: column;
+align-items: flex-start;
+gap: 16px;
+border-radius: 16px;
+border: 0.59px solid #E5E7EB;
+background: #FFF;
+box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10);
+}
+.rowtable{
+    display: flex;
+width: 100%;
+gap: 24px;
+}
+
+
+.table h3{
+    color: #1A1A1A;
+font-family: Outfit;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 27px; /* 150% */
+}
+
+.msgs{
+    display: flex;
+
+flex-direction: column;
+align-items: flex-start;
+gap: 12px;
+flex-shrink: 0;
+align-self: stretch;
 }

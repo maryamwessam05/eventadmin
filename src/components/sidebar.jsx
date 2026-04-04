@@ -20,14 +20,14 @@ const Sidebar = () => {
                 <img src={logo} alt="" />
 
                 <div className="links">
-                    <SideLink to="/" class="linkactive" icon={icon1} text="Dashboard" />
-                    <SideLink to="/events" class="link" icon={icon2} text="Events" />
-                    <SideLink to="/bookings" class="link" icon={icon3} text="Bookings" />
-                    <SideLink to="/categories" class="link" icon={icon4} text="Categories" />
-                    <SideLink to="/users" class="link" icon={icon5} text="Users" />
-                    <SideLink to="/support" class="link" icon={icon6} text="Support Messages" />
-                    <SideLink to="/feedback" class="link" icon={icon7} text="Feedback   " />
-                    <SideLink to="/sitecontent" class="link" icon={icon8} text="Site Content" />
+                    <SideLink to="/" icon={icon1} text="Dashboard" />
+                    <SideLink to="/events" icon={icon2} text="Events" />
+                    <SideLink to="/bookings" icon={icon3} text="Bookings" />
+                    <SideLink to="/categories" icon={icon4} text="Categories" />
+                    <SideLink to="/users" icon={icon5} text="Users" />
+                    <SideLink to="/support" icon={icon6} text="Support Messages" />
+                    <SideLink to="/feedback" icon={icon7} text="Feedback" />
+                    <SideLink to="/sitecontent" icon={icon8} text="Site Content" />
                 </div>
 
                 <div className="log">

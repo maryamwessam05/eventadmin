@@ -60,3 +60,31 @@ transition: all 0.3s ease;
 .link:hover img{
     filter: brightness(0);
 }
+
+.linkactive {
+  position: relative;
+}
+
+.linkactive::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  width: 4px;
+  height: 100%;
+  background: #C8F22B;
+  border-radius: 4px;
+}
+
+.link,
+.linkactive {
+  color: #6B7280; /* default */
+}
+
+.linkactive {
+  color: #1A1A1A;
+}
+
+.link *,
+.linkactive * {
+  color: inherit;
+}

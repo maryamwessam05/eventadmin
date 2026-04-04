@@ -1,20 +1,22 @@
 import React from 'react';
 import "./link.css";
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const SideLink = (props) => {
     return ( 
-        <>
-
         <div className="linkcontainer">
-            <Link to={props.to} className={props.class}>
-                 <img src={props.icon} alt="" />
+            <NavLink 
+                to={props.to}
+                end={props.to === "/"} // fixes "/" issue
+                className={({ isActive }) =>
+                    isActive ? "link linkactive" : "link"
+                }
+            >
+                <img src={props.icon} alt="" />
                 <p>{props.text}</p>
-            </Link>
+            </NavLink>
         </div>
-        
-        </>
-     );
+    );
 }
  
 export default SideLink;
