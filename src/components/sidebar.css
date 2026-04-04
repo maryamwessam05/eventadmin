@@ -13,7 +13,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    display: flex;
+    display: flex;border-right: 0.59px solid #E5E7EB;
 }
 
 .log{
