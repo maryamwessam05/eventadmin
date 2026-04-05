@@ -22,7 +22,7 @@ const Sidebar = () => {
                 <div className="links">
                     <SideLink to="/" icon={icon1} text="Dashboard" />
                     <SideLink to="/events" icon={icon2} text="Events" />
-                    <SideLink to="/bookings" icon={icon3} text="Bookings" />
+                    <SideLink to="/booking" icon={icon3} text="Bookings" />
                     <SideLink to="/categories" icon={icon4} text="Categories" />
                     <SideLink to="/users" icon={icon5} text="Users" />
                     <SideLink to="/support" icon={icon6} text="Support Messages" />

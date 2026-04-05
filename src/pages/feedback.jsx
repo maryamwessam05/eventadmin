@@ -3,11 +3,12 @@ import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
 import searchIcon from "../assets/search.svg";
-import "./booking.css";
+import "./events.css";
 import "./dashboard.css";
 import Filterbtn from '../components/filterbtn';
+import star from "../assets/star.svg"
 
-const Booking = () => {
+const Feedback = () => {
     return ( 
         <>
         <main>
@@ -25,8 +26,7 @@ const Booking = () => {
                 </div>
                 <div className="maincont">
                     <div className="headercont">
-                        <Title title="Events Management" description="Manage all your events in one place" />
-                        <button className='add'>+ Add Event</button>
+                        <Title title="Feedback & Reviews" description="Monitor customer feedback and ratings" />
                     </div>
 
                     <div className="filter">
@@ -34,17 +34,17 @@ const Booking = () => {
                         <img src={searchIcon} alt="" />
                         <input
                             type="text"
-                            placeholder="Search events..."
+                            placeholder="Search feedback..."
                             
                         />
                         </div>
                         <div className="filterbtns">
-                            <Filterbtn style="clicked" text="All" />
-                            <Filterbtn style="disabeled" text="Music" />
-                            <Filterbtn style="disabeled" text="Conference" />
-                            <Filterbtn style="disabeled" text="Food" />
-                            <Filterbtn style="disabeled" text="Art" />
-                            <Filterbtn style="disabeled" text="Sports" />
+                            <Filterbtn style="clicked" text="All"/>
+                            <Filterbtn style="disabeled" text="5" icon={star} />
+                            <Filterbtn style="disabeled" text="4" icon={star} />
+                            <Filterbtn style="disabeled" text="3" icon={star} />
+                            <Filterbtn style="disabeled" text="2" icon={star} />
+                            <Filterbtn style="disabeled" text="1" icon={star} />
                         </div>
                     </div>
 
@@ -56,4 +56,4 @@ const Booking = () => {
      );
 }
  
-export default Booking;
+export default Feedback;

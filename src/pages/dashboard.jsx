@@ -14,8 +14,27 @@ import tabicon2 from "../assets/tabicon02.svg";
 import linechart from "../assets/LineChart.svg";
 import barchart from "../assets/BarChart.svg";
 import Activity from '../components/activity';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
 
 const Dashboard = () => {
+    const bookingsData = [
+  { month: 'Jan', bookings: 45 },
+  { month: 'Feb', bookings: 52 },
+  { month: 'Mar', bookings: 68 },
+  { month: 'Apr', bookings: 85 },
+  { month: 'May', bookings: 95 },
+  { month: 'Jun', bookings: 110 },
+];
+const revenueData = [
+  { month: 'Jan', revenue: 4500 },
+  { month: 'Feb', revenue: 5200 },
+  { month: 'Mar', revenue: 6800 },
+  { month: 'Apr', revenue: 8500 },
+  { month: 'May', revenue: 9500 },
+  { month: 'Jun', revenue: 11000 },
+];
+
     return (  
         <>  
         <main>
@@ -48,14 +67,48 @@ const Dashboard = () => {
                                 <img src={tabicon1} alt="" />
                                 <h3>Recent Activity</h3>
                             </div>
-                            <img src={linechart} alt="" />
+                             <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={bookingsData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                <XAxis dataKey="month" stroke="#6b7280" />
+                                <YAxis stroke="#6b7280" />
+                                <Tooltip
+                                    contentStyle={{
+                                    backgroundColor: 'white',
+                                    border: '1px solid #e5e7eb',
+                                    borderRadius: '12px',
+                                    }}
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="bookings"
+                                    stroke="#2F91F8"
+                                    strokeWidth={3}
+                                    dot={{ fill: '#2F91F8', r: 6 }}
+                                />
+                                </LineChart>
+                            </ResponsiveContainer>
                         </div>
                         <div className="table">
                             <div className="tableheader">
                                 <img src={tabicon2} alt="" />
                                 <h3>Revenue</h3>
                             </div>
-                            <img src={barchart} alt="" />
+                            <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={revenueData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                            <XAxis dataKey="month" stroke="#6b7280" />
+                            <YAxis stroke="#6b7280" />
+                            <Tooltip
+                                contentStyle={{
+                                backgroundColor: 'white',
+                                border: '1px solid #e5e7eb',
+                                borderRadius: '12px',
+                                }}
+                            />
+                            <Bar dataKey="revenue" fill="#C8F22B" radius={[12, 12, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
                         </div>
                     </div>
 
