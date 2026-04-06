@@ -85,3 +85,69 @@ box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px -1px rgba(0, 0, 0, 0.10);
 align-items: flex-start;
 gap: 8px;
 }
+
+table{
+  display: flex;
+padding-bottom: 0.295px;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+flex-shrink: 0;
+align-self: stretch;
+border-radius: 16px;
+border: 0.59px solid #E5E7EB;
+background: #FFF;
+box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px -1px rgba(0, 0, 0, 0.10);
+}
+
+thead{
+  display: flex;
+width: 100%;
+justify-content: space-between;
+align-items: flex-start;
+border-bottom: 0.59px solid #E5E7EB;
+background: #F3F4F6;
+flex-shrink: 0;
+border-top-left-radius: 16px;
+border-top-right-radius: 16px;
+padding: 20px;
+
+
+}
+
+tbody{
+  display: flex;
+width: 100%;
+justify-content: space-between;
+align-items: flex-start;
+flex-shrink: 0;
+padding: 20px;
+
+}
+
+tr{
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+
+}
+
+tbody tr{
+    border-bottom: 0.59px solid #E5E7EB;
+
+}
+th{
+color: #1A1A1A;
+font-family: Outfit;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; /* 150% */
+}
+
+.edit, .delete{
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}

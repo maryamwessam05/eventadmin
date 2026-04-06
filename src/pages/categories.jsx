@@ -2,10 +2,8 @@ import React from 'react';
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
-import searchIcon from "../assets/search.svg";
 import "./categories.css";
 import "./dashboard.css";
-import Filterbtn from '../components/filterbtn';
 
 const Categories = () => {
     return ( 

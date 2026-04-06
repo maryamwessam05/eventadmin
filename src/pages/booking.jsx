@@ -25,8 +25,7 @@ const Booking = () => {
                 </div>
                 <div className="maincont">
                     <div className="headercont">
-                        <Title title="Events Management" description="Manage all your events in one place" />
-                        <button className='add'>+ Add Event</button>
+                        <Title title="Booking Management" description="Track and manage all event bookings" />
                     </div>
 
                     <div className="filter">
