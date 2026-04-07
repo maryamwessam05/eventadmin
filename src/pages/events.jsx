@@ -42,9 +42,8 @@ const Events = () => {
             <Sidebar /> 
 
             </div>
-            <EditModal modalname="Event" />
-            <AddModal modalname="Event" />
-            <div className="content">
+            <EditModal type="event" modalname="Event" />
+            <AddModal type="event" modalname="Event" />            <div className="content">
                 <div className="header">
                     <div className="language">
                         <div className="selected">EN</div>

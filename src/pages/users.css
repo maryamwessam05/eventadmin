@@ -1,0 +1,12 @@
+.inti{
+    display: flex;
+width: 39.996px;
+height: 39.996px;
+padding: 0 15.916px 0 15.915px;
+justify-content: center;
+align-items: center;
+flex-shrink: 0;
+border-radius: 50%;
+background-color: #2F91F8;
+color: white;
+}
