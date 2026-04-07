@@ -1,7 +1,7 @@
 import React from 'react';
 import "./editmodal.css";
 
-const EditModal = () => {
+const EditModal = (props) => {
     const closeModal = () => {
         const modal = document.querySelector(".editmodal");
         modal.style.display = "none";
@@ -11,16 +11,16 @@ const EditModal = () => {
         <>
         <div className="editmodal">
             <div className="editcont">
-                <h1>Edit Event</h1>
+                <h1>Edit {props.modalname}</h1>
                 <form action="">
                     <div className="formrow">
                         <div className="grp">
-                            <label htmlFor="">Event Name</label>
-                            <input type="text" placeholder='Event Name' />
+                            <label htmlFor="">{props.modalname} Name</label>
+                            <input type="text" placeholder='Event Name' value="" />
                         </div>
                         <div className="grp">
-                            <label htmlFor="">Event Name (AR)</label>
-                            <input type="text" placeholder='Event Name' />
+                            <label htmlFor="">{props.modalname} Name (AR)</label>
+                            <input type="text" placeholder='Event Name' value="" />
                         </div>
                     </div>
                     <div className="formrow">
@@ -40,18 +40,18 @@ const EditModal = () => {
                     </div>
                     <div className="formrow">
                         <div className="grp">
-                            <label htmlFor="">Event Name</label>
-                            <input type="text" placeholder='Event Name' />
+                            <label htmlFor="">Date&Time</label>
+                            <input type="datetime-local" value="" />
                         </div>
                         <div className="grp">
-                            <label htmlFor="">Event Name</label>
-                            <input type="text" placeholder='Event Name' />
+                            <label htmlFor="">Price ($)</label>
+                            <input type="number" placeholder='0.00$' />
                         </div>
                     </div>
                     <div className="formrow">
                         <div className="grp">
-                            <label htmlFor="">Event Name</label>
-                            <input type="text" placeholder='Event Name' />
+                            <label htmlFor="">Description</label>
+                            <textarea placeholder='Description' value="" />
                         </div>
                        
                     </div>

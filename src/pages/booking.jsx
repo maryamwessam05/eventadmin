@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useEffect , useState } from 'react';
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
 import searchIcon from "../assets/search.svg";
 import "./booking.css";
 import "./dashboard.css";
+import {supabase} from "../supabase"
 import Filterbtn from '../components/filterbtn';
 
 const Booking = () => {
+    const [bookings, setBookings] = useState([]); 
+    
+    
+useEffect(() => {
+    const getEvents = async () => {
+        const { data, error } = await supabase.from("bookings")
+            .select(`booking_id, booking_reference, ticket_quantity, total_price, booking_status, payment_status, booked_at,
+                users ( full_name_en ),
+                events ( title_en )
+            `);
+        
+        console.log("data:", data);
+        console.log("error:", error);
+
+        setBookings(data ?? []); 
+    };
+    getEvents();
+}, []);
+
+    const getStatusClass = (status) => {
+    switch(status?.toLowerCase()) {
+        case "confirmed": return "stat_green";
+        case "pending": return "stat_yellow";
+        case "cancelled": return "stat_red";
+        default: return "";
+    }
+}
+
     return ( 
         <>
         <main>
@@ -33,19 +62,54 @@ const Booking = () => {
                         <img src={searchIcon} alt="" />
                         <input
                             type="text"
-                            placeholder="Search events..."
+                            placeholder="Search by user or event..."
                             
                         />
                         </div>
                         <div className="filterbtns">
                             <Filterbtn style="clicked" text="All" />
-                            <Filterbtn style="disabeled" text="Music" />
-                            <Filterbtn style="disabeled" text="Conference" />
-                            <Filterbtn style="disabeled" text="Food" />
-                            <Filterbtn style="disabeled" text="Art" />
-                            <Filterbtn style="disabeled" text="Sports" />
+                            <Filterbtn style="disabeled" text="Confirmed" />
+                            <Filterbtn style="disabeled" text="Pending" />
+                            <Filterbtn style="disabeled" text="Cancelled" />
                         </div>
                     </div>
+
+                    <div className="table">
+                                        <div className="table-wrapper">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th style={{paddingRight: "86px"}}>User</th>
+                                                <th style={{paddingRight: "108px"}}>Event</th>
+                                                <th style={{paddingRight: "30px"}}>Reference</th>
+                                                <th>Ticket Quantity</th>
+                                                <th>Total Price</th>
+                                                <th style={{paddingRight: "30px"}}>Status</th>
+                                                <th style={{paddingRight: "30px"}}>Payment Status</th>
+                                                <th style={{paddingRight: "46px"}}>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {bookings.map((booking) => {
+                                                return (
+                                                <tr key={booking.booking_id}>
+                                                    
+                                                    <td>{booking.users?.full_name_en}</td>
+                                                    <td>{booking.events?.title_en}</td>
+                                                    <td>{booking.booking_reference}</td>
+                                                    <td>{booking.ticket_quantity}</td>
+                                                    <td>{booking.total_price}</td>
+                                                    <td className={getStatusClass(booking.booking_status)}>{booking.booking_status}</td>
+                                                    <td className={getStatusClass(booking.payment_status)}>{booking.payment_status}</td>
+                                                    <td><span className='deletebtn'>Delete</span></td>
+                    
+                                                </tr>
+                                                );
+                                            })}
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                        </div>
 
                 </div>
             </div>

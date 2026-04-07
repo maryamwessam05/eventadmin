@@ -8,8 +8,9 @@ import "./dashboard.css";
 import Filterbtn from '../components/filterbtn';
 import edit from "../assets/edit.svg";
 import del from "../assets/delete.svg";
-import EditModal from '../components/editmodal';
+import EditModal from '../modals/editmodal';
 import {supabase} from "../supabase"
+import AddModal from '../modals/addmodal';
 
 const Events = () => {
     const [events, setEvents] = useState([" "]); 
@@ -28,6 +29,12 @@ const Events = () => {
         const modal = document.querySelector(".editmodal");
         modal.style.display = "flex";
     }
+
+    const openAddModal = () => {
+        const modal = document.querySelector(".addmodal");
+        modal.style.display = "flex";
+    }
+    
     return ( 
         <>
         <main>
@@ -35,7 +42,8 @@ const Events = () => {
             <Sidebar /> 
 
             </div>
-            <EditModal />
+            <EditModal modalname="Event" />
+            <AddModal modalname="Event" />
             <div className="content">
                 <div className="header">
                     <div className="language">
@@ -47,7 +55,7 @@ const Events = () => {
                 <div className="maincont">
                     <div className="headercont">
                         <Title title="Events Management" description="Manage all your events in one place" />
-                        <button className='add'>+ Add Event</button>
+                        <button  className='add' onClick={openAddModal}>+ Add Event</button>
                     </div>
 
                     <div className="filter">
@@ -75,13 +83,13 @@ const Events = () => {
                         <thead>
                         <tr>
                             <th>Image</th>
-                            <th>Title EN</th>
-                            <th>Title AR</th>
-                            <th>Description EN</th>
-                            <th>Description AR</th>
+                            <th style={{paddingRight: "86px"}}>Title EN</th>
+                            <th style={{paddingRight: "56px"}}>Title AR</th>
+                            <th style={{paddingRight: "30px"}}>Description EN</th>
+                            <th style={{paddingRight: "56px"}}>Description AR</th>
                             <th>Location EN</th>
                             <th>Location AR</th>
-                            <th>Venue EN</th>
+                            <th style={{paddingRight: "46px"}}>Venue EN</th>
                             <th>Venue AR</th>
                             <th>Price</th>
                             <th>Capacity</th>
