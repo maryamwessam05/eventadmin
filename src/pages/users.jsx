@@ -82,7 +82,7 @@ const Users = () => {
                                 <td>{user.phone}</td>
                                 <td>{user.updated_at}</td>
                                 <td>{user.role}</td>
-                                <td >
+                                <td>
                                     <div className="bookingc">
                                         {user.bookings}
                                         </div>

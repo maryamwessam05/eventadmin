@@ -7,8 +7,6 @@
 .categcont{
     display: flex;
 flex-wrap: wrap;
-padding: 24px;
-flex-wrap: wrap;
 align-items: flex-start;
 gap: 23px;
 flex-shrink: 0;
