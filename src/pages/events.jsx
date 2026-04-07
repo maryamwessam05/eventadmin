@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect , useState } from 'react';
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
@@ -9,8 +9,21 @@ import Filterbtn from '../components/filterbtn';
 import edit from "../assets/edit.svg";
 import del from "../assets/delete.svg";
 import EditModal from '../components/editmodal';
+import {supabase} from "../supabase"
 
 const Events = () => {
+    const [events, setEvents] = useState([" "]); 
+
+    useEffect(()=> {
+        const getEvents = async() => {
+            const res = await supabase.from("events").select("*");
+            setEvents(res.data);
+        }
+        getEvents();
+
+    },[])
+
+
     const openModal = () => {
         const modal = document.querySelector(".editmodal");
         modal.style.display = "flex";
@@ -57,35 +70,68 @@ const Events = () => {
                     </div>
 
                     <div className="table">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th style={{ width: "30%", textAlign: "left" }}>Event Name</th>
-                                <th style={{ width: "15%", textAlign: "left" }}>Category</th>
-                                <th style={{ width: "15%", textAlign: "left" }}>Date</th>
-                                <th style={{ width: "10%", textAlign: "left" }}>Price</th>
-                                <th style={{ width: "15%", textAlign: "left" }}>Status</th>
-                                <th style={{ width: "15%", textAlign: "left" }}>Actions</th>
+                    <div className="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title EN</th>
+                            <th>Title AR</th>
+                            <th>Description EN</th>
+                            <th>Description AR</th>
+                            <th>Location EN</th>
+                            <th>Location AR</th>
+                            <th>Venue EN</th>
+                            <th>Venue AR</th>
+                            <th>Price</th>
+                            <th>Capacity</th>
+                            <th>Available Tickets</th>
+                            <th>Status</th>
+                            <th>Is Featured</th>
+                            <th>Is Trending</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {events.map((event) => {
+                            return (
+                            <tr key={event.id}>
+                                <td>
+                                <img className="event-img" src={event.image_url} alt={event.title_en} />
+                                </td>
+                                <td>{event.title_en}</td>
+                                <td>{event.title_ar}</td>
+                                <td>{event.description_en}</td>
+                                <td >{event.description_ar}</td>
+                                <td>{event.location_en}</td>
+                                <td>{event.location_ar}</td>
+                                <td>{event.venue_en}</td>
+                                <td>{event.venue_ar}</td>
+                                <td>{event.price}</td>
+                                <td>{event.capacity}</td>
+                                <td>{event.available_tickets}</td>
+                                <td>{event.status}</td>
+                                <td><input type="checkbox" /></td>
+                                <td><input type="checkbox" /></td>
+
+
+
+                                <td>
+                                <div className="action-btns">
+                                    <button onClick={openModal} className="edit">
+                                    <img src={edit} alt="Edit" />
+                                    </button>
+                                    <button className="delete">
+                                    <img src={del} alt="Delete" />
+                                    </button>
+                                </div>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style={{ width: "30%", textAlign: "left" }}>Event 1</td>
-                                    <td style={{ width: "15%", textAlign: "left" }}>Music</td>
-                                    <td style={{ width: "15%", textAlign: "left" }}>2023-10-15</td>
-                                    <td style={{ width: "10%", textAlign: "left" }}>$50</td>
-                                    <td style={{ width: "15%", textAlign: "left" }}>Active</td>
-                                    <td style={{ width: "15%", textAlign: "left" }}>
-                                        <button onClick={openModal} className="edit">
-                                            <img src={edit} alt="Edit" />
-                                        </button>
-                                        <button className="delete">
-                                            <img src={del} alt="Delete" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            );
+                        })}
+                        </tbody>
+                    </table>
+                    </div>
                     </div>
 
                 </div>

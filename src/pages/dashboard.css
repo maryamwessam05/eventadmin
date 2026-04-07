@@ -13,9 +13,8 @@ main{
     justify-content: flex-end;
 }
 .sidenav{
-    position: fixed;
-    top: 0;
-    left: 0;
+    display: flex;
+    width: 18%;
 }
 .content{
     width: 82%;
