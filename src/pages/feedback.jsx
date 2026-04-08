@@ -15,7 +15,7 @@ const Feedback = () => {
         
             useEffect(()=> {
                 const getFeedback = async() => {
-                    const res = await supabase.from("support_feedback").select("* , events (title_en , title_ar) , support_messages (user_id)");
+                    const res = await supabase.from("support_feedback").select("* , events (title_en , title_ar) , support_messages (user_id) , users(full_name_en , initials)");
                     setFeedback(res.data);
                 }
                 getFeedback();
@@ -59,6 +59,7 @@ const Feedback = () => {
                             <Filterbtn style="disabeled" text="1" icon={star} />
                         </div>
 
+                    </div>
                         <div className="table">
                     <div className="table-wrapper">
                     <table>
@@ -66,11 +67,12 @@ const Feedback = () => {
                         <tr>
                             <th></th>
                             <th style={{paddingRight: "86px"}}>User</th>
-                            <th style={{paddingRight: "56px"}}>Event AR</th>
                             <th style={{paddingRight: "30px"}}>Event EN</th>
+                            <th style={{paddingRight: "56px"}}>Event AR</th>
                             <th style={{paddingRight: "56px"}}>Rating</th>
-                            <th style={{paddingRight: "56px"}}>Comment</th>
-                            <th>Date</th>
+                            <th style={{paddingRight: "56px"}}>Comment EN</th>
+                            <th style={{paddingRight: "56px"}}>Comment AR</th>
+                            <th>Date&Time</th>
                             <th style={{paddingRight: "46px"}}>Action</th>
                         </tr>
                         </thead>
@@ -79,31 +81,30 @@ const Feedback = () => {
                             return (
                             <tr key={feedback.id}>
                                 <td>
-                                    <div className="inti">{feedback.initials}</div>
+                                    <div className="inti">{feedback.users?.initials}</div>
                                 </td>
+                                <td>{feedback.users?.full_name_en}</td>
                                 <td>{feedback.events?.title_en}</td>
-                                <td>{feedback.full_name_ar}</td>
-                                <td>{feedback.email}</td>
-                                <td>{feedback.phone}</td>
-                                <td>{feedback.updated_at}</td>
-                                <td>{feedback.role}</td>
+                                <td>{feedback.events?.title_ar}</td>
                                 <td>
                                     <div className="bookingc">
-                                        {feedback.bookings}
+                                    {feedback.rating}
                                         </div>
                                     </td>
-                                <td>{feedback.password}</td>
-                                <td>
+                                <td>{feedback.comment_en}</td>
+                                <td>{feedback.comment_ar}</td>
+                                <td>{feedback.updated_at}</td>
+                               <td>
                                     <button className="delete">
                                     <img src={del} alt="Delete" />
                                     </button>
-                                </td>
+                               </td>
+                                
                             </tr>
                             );
                         })}
                         </tbody>
                     </table>
-                    </div>
                     </div>
                     </div>
 

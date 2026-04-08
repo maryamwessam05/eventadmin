@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useEffect , useState } from 'react';
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
 import "./events.css";
 import "./dashboard.css";
 import save from "../assets/save.svg"
+import {supabase} from "../supabase"
+import "./sitemanage.css"
+
 
 const SiteManage = () => {
+
+    const [site, setSite] = useState([" "]); 
+    
+        useEffect(()=> {
+            const getSite = async() => {
+                const res = await supabase.from("site_content").select("*");
+                setSite(res.data);    
+            }
+            getSite();
+            
+        },[])
+        console.log(site)
     return ( 
         <>
         <main>
@@ -29,6 +44,41 @@ const SiteManage = () => {
                             <img src={save} alt="" />
                               <span>Save Changes</span>     
                         </button>
+
+                    </div>
+
+                    <div className="sitemanage">
+     
+                            {site.map((site) => {
+                                    return(
+                                        <div className="siteinput">
+                                            <h1>{site.label} Section</h1>
+                                            <form action="">
+                                                <div className="group">
+                                                    <label htmlFor="">Title EN</label>
+                                                    <input type="text" value={site.title_en}/>
+
+                                                </div>
+                                                <div className="group">
+                                                    <label htmlFor="">Title AR</label>
+                                                    <input type="text" value={site.title_ar}/>
+
+                                                </div>
+                                                <div className="group">
+                                                    <label htmlFor="">Description EN</label>
+                                                    <input type="text" value={site.desc_en}/>
+
+                                                </div>
+                                                <div className="group">
+                                                    <label htmlFor="">Description AR</label>
+                                                    <input type="text" value={site.desc_ar}/>
+
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    )
+                            })}
 
                     </div>
 

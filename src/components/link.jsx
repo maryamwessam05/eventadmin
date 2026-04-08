@@ -7,7 +7,7 @@ const SideLink = (props) => {
         <div className="linkcontainer">
             <NavLink 
                 to={props.to}
-                end={props.to === "/"} // fixes "/" issue
+                end={props.to === "/"} 
                 className={({ isActive }) =>
                     isActive ? "link linkactive" : "link"
                 }

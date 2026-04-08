@@ -28,6 +28,8 @@ const Sidebar = () => {
                     <SideLink to="/support" icon={icon6} text="Support Messages" />
                     <SideLink to="/feedback" icon={icon7} text="Feedback" />
                     <SideLink to="/sitecontent" icon={icon8} text="Site Content" />
+                    <SideLink to="/navcontent" icon={icon8} text="Nav Content" />
+
                 </div>
 
                 <div className="log">
