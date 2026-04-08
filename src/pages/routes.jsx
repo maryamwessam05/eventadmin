@@ -8,6 +8,7 @@ import Users from './users';
 import SupportMessages from './supportmessages';
 import Feedback from './feedback';
 import SiteManage from './sitemanage';
+import NavContent from './navcontent';
 
 const AppRoutes = () => {
     return ( 
@@ -23,6 +24,8 @@ const AppRoutes = () => {
                     <Route path='/support' element={<SupportMessages />} />
                     <Route path='/feedback' element={<Feedback />} />
                     <Route path='/sitecontent' element={<SiteManage />} />
+                    <Route path='/sitenavcontent' element={<NavContent />} />
+
                 </Routes>
             </BrowserRouter>
 

@@ -10,6 +10,7 @@ import icon5 from "../assets/icon05.svg"
 import icon6 from "../assets/icon06.svg"
 import icon7 from "../assets/icon07.svg"
 import icon8 from "../assets/icon08.svg"
+import icon9 from "../assets/icon.svg"
 import prof from "../assets/prof.svg"
 import logout from "../assets/logout.svg"
 
@@ -28,7 +29,7 @@ const Sidebar = () => {
                     <SideLink to="/support" icon={icon6} text="Support Messages" />
                     <SideLink to="/feedback" icon={icon7} text="Feedback" />
                     <SideLink to="/sitecontent" icon={icon8} text="Site Content" />
-                    <SideLink to="/navcontent" icon={icon8} text="Nav Content" />
+                    <SideLink to="/sitenavcontent" icon={icon9} text="Nav Content" />
 
                 </div>
 
