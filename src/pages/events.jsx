@@ -89,7 +89,7 @@ const Events = () => {
                             <th>Location EN</th>
                             <th>Location AR</th>
                             <th style={{paddingRight: "46px"}}>Venue EN</th>
-                            <th>Venue AR</th>
+                            <th style={{paddingRight: "36px"}}>Venue AR</th>
                             <th>Price</th>
                             <th>Capacity</th>
                             <th>Available Tickets</th>

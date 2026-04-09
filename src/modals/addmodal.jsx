@@ -77,6 +77,12 @@ const AddModal = (props) => {
                                     <textarea placeholder='Description' />
                                 </div>
                             </div>
+                            <div className="formrow">
+                                <div className="grp">
+                                    <label htmlFor="">Image</label>
+                                    <input type="file" accept="image/*" />
+                                </div>
+                            </div>
                         </>
                     )}
                 </form>
