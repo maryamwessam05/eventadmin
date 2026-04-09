@@ -34,6 +34,9 @@ const Events = () => {
         const modal = document.querySelector(".addmodal");
         modal.style.display = "flex";
     }
+    const deleteEvent = ((id) =>{
+            console.log(id)
+    })
     
     return ( 
         <>
@@ -128,7 +131,7 @@ const Events = () => {
                                     <button onClick={openModal} className="edit">
                                     <img src={edit} alt="Edit" />
                                     </button>
-                                    <button className="delete">
+                                    <button onClick={()=>deleteEvent(event.id)} className="delete">
                                     <img src={del} alt="Delete" />
                                     </button>
                                 </div>

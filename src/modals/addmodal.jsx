@@ -6,21 +6,26 @@ const AddModal = (props) => {
         const modal = document.querySelector(".addmodal");
         modal.style.display = "none";
     }
+    const createEvent = (()=>{
+        console.log(111)
+    })
+   
+
 
     return ( 
         <>
         <div className="addmodal">
             <div className="editcont">
                 <h1>Add {props.modalname}</h1>
-                <form action="">
+                <form action="" onSubmit={createEvent}>
                     <div className="formrow">
                         <div className="grp">
                             <label htmlFor="">{props.modalname} Name</label>
-                            <input type="text" placeholder={`${props.modalname} Name`} />
+                            <input type="text" placeholder={`${props.modalname} Name`} required/>
                         </div>
                         <div className="grp">
                             <label htmlFor="">{props.modalname} Name (AR)</label>
-                            <input type="text" placeholder={`${props.modalname} Name AR`} />
+                            <input type="text" placeholder={`${props.modalname} Name AR`} required/>
                         </div>
                     </div>
 
@@ -29,11 +34,11 @@ const AddModal = (props) => {
                             <div className="formrow">
                                 <div className="grp">
                                     <label htmlFor="">Description</label>
-                                    <textarea placeholder='Description (EN)' defaultValue={props.data?.description_en} />
+                                    <textarea placeholder='Description (EN)' defaultValue={props.data?.description_en} required/>
                                 </div>
                                 <div className="grp">
                                     <label htmlFor="">Description (AR)</label>
-                                    <textarea placeholder='Description (AR)' defaultValue={props.data?.description_ar} />
+                                    <textarea placeholder='Description (AR)' defaultValue={props.data?.description_ar} required/>
                                 </div>
                             </div>
                             <div className="formrow">
@@ -64,23 +69,23 @@ const AddModal = (props) => {
                             <div className="formrow">
                                 <div className="grp">
                                     <label htmlFor="">Date & Time</label>
-                                    <input type="datetime-local" />
+                                    <input type="datetime-local" required />
                                 </div>
                                 <div className="grp">
                                     <label htmlFor="">Price ($)</label>
-                                    <input type="number" placeholder='0.00$' />
+                                    <input type="number" placeholder='0.00$'  required/>
                                 </div>
                             </div>
                             <div className="formrow">
                                 <div className="grp">
                                     <label htmlFor="">Description</label>
-                                    <textarea placeholder='Description' />
+                                    <textarea placeholder='Description' required/>
                                 </div>
                             </div>
                             <div className="formrow">
                                 <div className="grp">
                                     <label htmlFor="">Image</label>
-                                    <input type="file" accept="image/*" />
+                                    <input type="file" accept="image/*" required/>
                                 </div>
                             </div>
                         </>
