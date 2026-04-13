@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect , useState } from 'react';
 import "./dashboard.css";
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
@@ -11,13 +11,14 @@ import stat4 from "../assets/staticon04.svg";
 import stat5 from "../assets/staticon05.svg";
 import tabicon1 from "../assets/tabicon01.svg";
 import tabicon2 from "../assets/tabicon02.svg";
+import burger from "../assets/burger.svg"
 import linechart from "../assets/LineChart.svg";
 import barchart from "../assets/BarChart.svg";
 import Activity from '../components/activity';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-
 const Dashboard = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const bookingsData = [
   { month: 'Jan', bookings: 45 },
   { month: 'Feb', bookings: 52 },
@@ -35,20 +36,27 @@ const revenueData = [
   { month: 'Jun', revenue: 11000 },
 ];
 
+
     return (  
         <>  
         <main>
-            <div className="sidenav">
-            <Sidebar /> 
+            <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+            <Sidebar onClose={() => setSidebarOpen(false)} /> 
 
             </div>
             <div className="content">
                 <div className="header">
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="burger">
+                        <img src={burger} alt="" />
+                    </button>
+                    <div className="headaction">
+
                     <div className="language">
                         <div className="selected">EN</div>
                         <div className="unactive">AR</div>
                     </div>
                     <img src={notif} alt="" />
+                    </div>
                 </div>
                 <div className="maincont">
                     <Title title="Dashboard Overview" description="Welcome back! Here's what's happening with your events." />

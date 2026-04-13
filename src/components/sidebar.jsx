@@ -13,11 +13,13 @@ import icon8 from "../assets/icon08.svg"
 import icon9 from "../assets/icon.svg"
 import prof from "../assets/prof.svg"
 import logout from "../assets/logout.svg"
+import x from "../assets/x.svg"
 
-const Sidebar = () => {
+const Sidebar = ({ onClose }) => {
     return (  
         <>  
             <div className="sidebar">
+                <img src={x} className='x' alt="" onClick={onClose}/>
                 <img src={logo} alt="" />
 
                 <div className="links">

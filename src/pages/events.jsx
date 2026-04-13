@@ -25,18 +25,36 @@ const Events = () => {
     },[])
 
 
-    const openModal = () => {
-        const modal = document.querySelector(".editmodal");
-        modal.style.display = "flex";
-    }
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+const openModal = (event) => {
+    setSelectedEvent(event);
+    const modal = document.querySelector(".editmodal");
+    modal.style.display = "flex";
+}
 
     const openAddModal = () => {
         const modal = document.querySelector(".addmodal");
         modal.style.display = "flex";
     }
-    const deleteEvent = ((id) =>{
-            console.log(id)
-    })
+    
+    const deleteEvent = async (id) => {
+    const relatedTables = ["bookings", "event_categories", "event_feedback", "support_feedback"];    
+    for (const table of relatedTables) {
+        const { error } = await supabase.from(table).delete().eq("event_id", id);
+        if (error) {
+            console.error(`Failed to delete from ${table}:`, error);
+            return;
+        }
+    }
+    const { error } = await supabase.from("events").delete().eq("event_id", id);
+    if (error) {
+        console.error("Failed to delete event:", error);
+        return;
+    }
+    setEvents(prev => prev.filter(event => event.event_id !== id));
+    
+}
     
     return ( 
         <>
@@ -45,9 +63,21 @@ const Events = () => {
             <Sidebar /> 
 
             </div>
-            <EditModal type="event" modalname="Event" />
-            <AddModal type="event" modalname="Event" />            <div className="content">
+            <EditModal 
+    type="event" 
+    modalname="Event" 
+    data={selectedEvent}
+    onEventUpdated={(updatedEvent) => setEvents(prev => 
+        prev.map(e => e.event_id === updatedEvent.event_id ? updatedEvent : e)
+    )}
+/>
+            <AddModal 
+                type="event" 
+                modalname="Event" 
+                onEventAdded={(newEvent) => setEvents(prev => [...prev, newEvent])} 
+            />          <div className="content">
                 <div className="header">
+                    
                     <div className="language">
                         <div className="selected">EN</div>
                         <div className="unactive">AR</div>
@@ -93,6 +123,8 @@ const Events = () => {
                             <th>Location AR</th>
                             <th style={{paddingRight: "46px"}}>Venue EN</th>
                             <th style={{paddingRight: "36px"}}>Venue AR</th>
+                            <th style={{paddingRight: "64px"}}>Date</th>
+                            <th>Time</th>
                             <th>Price</th>
                             <th>Capacity</th>
                             <th>Available Tickets</th>
@@ -105,7 +137,7 @@ const Events = () => {
                         <tbody>
                         {events.map((event) => {
                             return (
-                            <tr key={event.id}>
+                            <tr key={event.event_id}>
                                 <td>
                                 <img className="event-img" src={event.image_url} alt={event.title_en} />
                                 </td>
@@ -117,6 +149,8 @@ const Events = () => {
                                 <td>{event.location_ar}</td>
                                 <td>{event.venue_en}</td>
                                 <td>{event.venue_ar}</td>
+                                <td>{event.date}</td>
+                                <td>{event.time}</td>
                                 <td>{event.price}</td>
                                 <td>{event.capacity}</td>
                                 <td>{event.available_tickets}</td>
@@ -128,10 +162,10 @@ const Events = () => {
 
                                 <td>
                                 <div className="action-btns">
-                                    <button onClick={openModal} className="edit">
+                                    <button onClick={() => openModal(event)}  className="edit">
                                     <img src={edit} alt="Edit" />
                                     </button>
-                                    <button onClick={()=>deleteEvent(event.id)} className="delete">
+                                    <button onClick={()=>deleteEvent(event.event_id)} className="delete">
                                     <img src={del} alt="Delete" />
                                     </button>
                                 </div>

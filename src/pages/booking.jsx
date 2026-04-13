@@ -37,6 +37,13 @@ useEffect(() => {
     }
 }
 
+ const deleteBooking = async(id) =>{
+        const res = await supabase.from("bookings").delete().eq("booking_id", id) ;
+          setBookings(prev => prev.filter(booking => booking.booking_id !== id));
+
+        console.log(res);
+    }
+
     return ( 
         <>
         <main>
@@ -101,7 +108,7 @@ useEffect(() => {
                                                     <td>{booking.total_price}</td>
                                                     <td className={getStatusClass(booking.booking_status)}>{booking.booking_status}</td>
                                                     <td className={getStatusClass(booking.payment_status)}>{booking.payment_status}</td>
-                                                    <td><span className='deletebtn'>Delete</span></td>
+                                                    <td onClick={()=>deleteBooking(booking.booking_id)} ><span className='deletebtn'>Delete</span></td>
                     
                                                 </tr>
                                                 );

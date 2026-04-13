@@ -30,6 +30,13 @@ const Categories = () => {
         modal.style.display = "flex";
     }
 
+     const deleteCategory = async(id) =>{
+            const res = await supabase.from("categories").delete().eq("category_id", id) ;
+              setCategories(prev => prev.filter(category => category.category_id !== id));
+    
+            console.log(res);
+        }
+
     return ( 
         <>
         <main>
@@ -39,7 +46,7 @@ const Categories = () => {
             </div>
             <EditModal type="category" modalname="Category" />
 
-           <AddModal type="category" modalname="Category" />
+           <AddModal type="category" modalname="Category" onEventAdded={(newCategory) => setCategories(prev => [...prev, newCategory])} />
             <div className="content">
                 <div className="header">
                     <div className="language">
@@ -66,7 +73,7 @@ const Categories = () => {
                                         <button onClick={openeditModal} className="edit">
                                         <img src={edit} alt="Edit" />
                                         </button>
-                                        <button className="delete">
+                                        <button onClick={()=>deleteCategory(category.category_id)}  className="delete">
                                         <img src={del} alt="Delete" />
                                         </button>
                                     </div>

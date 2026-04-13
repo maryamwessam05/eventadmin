@@ -104,3 +104,23 @@ font-style: normal;
 font-weight: 400;
 line-height: 24px; /* 150% */
 }
+@media (max-width: 1060px) {
+.content{
+    width: 100%;
+}
+.burger{
+    display: flex;
+    cursor: pointer;
+}
+.sidenav{
+    position: absolute;
+    width: 250px;
+    box-shadow: 8px 0 13.6px 0 rgba(0, 0, 0, 0.25);
+    left: 0;
+            transform: translateX(-500px);
+}
+.sidenav.open {
+        transform: translateX(0);
+        transition: all 300ms ease;
+    }
+}

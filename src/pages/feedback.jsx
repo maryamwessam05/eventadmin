@@ -21,6 +21,13 @@ const Feedback = () => {
                 getFeedback();
         
             },[])
+
+            const deleteFeedback = async(id) =>{
+            const res = await supabase.from("support_feedback").delete().eq("id", id) ;
+              setFeedback(prev => prev.filter(feedback => feedback.id !== id));
+    
+            console.log(res);
+        }
     return ( 
         <>
         <main>
@@ -95,7 +102,7 @@ const Feedback = () => {
                                 <td>{feedback.comment_ar}</td>
                                 <td>{feedback.updated_at}</td>
                                <td>
-                                    <button className="delete">
+                                    <button onClick={()=>deleteFeedback(feedback.id)} className="delete">
                                     <img src={del} alt="Delete" />
                                     </button>
                                </td>

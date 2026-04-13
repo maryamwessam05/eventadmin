@@ -20,6 +20,13 @@ const Users = () => {
             getUsers();
     
         },[])
+
+        const deletUser = async(id) =>{
+                    const res = await supabase.from("users").delete().eq("id", id) ;
+                      setUsers(prev => prev.filter(users => users.id !== id));
+            
+                    console.log(res);
+                }
     return ( 
         <>
         <main>
@@ -89,7 +96,7 @@ const Users = () => {
                                     </td>
                                 <td>{user.password}</td>
                                 <td>
-                                    <button className="delete">
+                                    <button onClick={()=>deletUser(user.id)} className="delete">
                                     <img src={del} alt="Delete" />
                                     </button>
                                 </td>

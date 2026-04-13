@@ -22,6 +22,13 @@ const SupportMessages = () => {
                 getSupportMsgs();
         
             },[])
+
+            const deleteSuppmsg = async(id) =>{
+            const res = await supabase.from("support_messages").delete().eq("support_id", id) ;
+              setSupportMsgs(prev => prev.filter(supportmsgs => supportmsgs.support_id !== id));
+    
+            console.log(res);
+        }
     return ( 
         <>
         <main>
@@ -96,7 +103,7 @@ const SupportMessages = () => {
                                         <button className="edit">
                                         <img src={check} alt="Edit" />
                                         </button>
-                                        <button className="delete">
+                                        <button onClick={()=>deleteSuppmsg(support.support_id)} className="delete">
                                         <img src={del} alt="Delete" />
                                         </button>
                                     </div>
