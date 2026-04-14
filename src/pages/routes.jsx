@@ -9,6 +9,7 @@ import SupportMessages from './supportmessages';
 import Feedback from './feedback';
 import SiteManage from './sitemanage';
 import NavContent from './navcontent';
+import Login from './login';
 
 const AppRoutes = () => {
     return ( 
@@ -16,7 +17,8 @@ const AppRoutes = () => {
 
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/home" element={<Dashboard />} />
                     <Route path="/events" element={<Events />} />
                     <Route path='/booking' element={<Booking />} />
                     <Route path='/categories' element={<Categories />} />

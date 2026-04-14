@@ -23,7 +23,7 @@ const Sidebar = ({ onClose }) => {
                 <img src={logo} alt="" />
 
                 <div className="links">
-                    <SideLink to="/" icon={icon1} text="Dashboard" />
+                    <SideLink to="/home" icon={icon1} text="Dashboard" />
                     <SideLink to="/events" icon={icon2} text="Events" />
                     <SideLink to="/booking" icon={icon3} text="Bookings" />
                     <SideLink to="/categories" icon={icon4} text="Categories" />
