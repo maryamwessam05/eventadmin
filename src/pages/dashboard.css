@@ -96,6 +96,7 @@ align-items: center;
 align-content: center;
 gap: 13px;
 flex-wrap: wrap;
+justify-content: center;
 width: 100%;
 }
 .statcards img{
@@ -177,4 +178,38 @@ align-self: stretch;
         transform: translateX(0);
         transition: all 300ms ease;
     }
+}
+
+@media (min-width:300px) and (max-width:600px){
+    .rowtable{
+        flex-direction: column;
+    }
+    .namedeet span {
+    width: 139px;
+}
+.statcards img {
+    width: 10vw;
+}
+.headercont {
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+}
+.filterbtns{
+    flex-wrap: wrap;
+}
+.filter{
+    flex-direction: column;
+    gap: 15px;
+}
+.cat{
+    width: 100%;
+}
+.sup{
+    width: 100%;
+}
+.group{
+    width: 100%;
+}
 }

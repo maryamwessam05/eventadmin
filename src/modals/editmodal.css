@@ -130,7 +130,7 @@ select{
   width: 100%;
   display: flex;    
 border-radius: 16px;
-padding: 12px 16px;
+padding: 6px 16px;
 border: 0;
 background: #F3F4F6;
 }
@@ -280,4 +280,10 @@ transition: all 0.2s ease;
     width: 20px !important;
     height: 20px;
     border: 1px solid #333;
+}
+
+@media (min-width:300px) and (max-width:600px){
+    .formrow{
+        flex-direction: column;
+    }
 }

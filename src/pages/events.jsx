@@ -12,11 +12,13 @@ import del from "../assets/delete.svg";
 import EditModal from '../modals/editmodal';
 import {supabase} from "../supabase"
 import AddModal from '../modals/addmodal';
+import SearchBar from '../components/search';
 
 const Events = () => {
     const [activeFilter, setActiveFilter] = useState("All");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [events, setEvents] = useState([" "]); 
+    const [search, setSearch] = useState("");  
 
     useEffect(()=> {
         const getEvents = async() => {
@@ -68,14 +70,19 @@ const openModal = (event) => {
     
 }
 
-const filteredEvents = activeFilter === "All"
-    ? events
-    : events.filter(event =>
+
+const filteredEvents = events
+    .filter(event =>
+        activeFilter === "All" ||
         event.event_categories?.some(
             ec => ec.categories?.title_en?.toLowerCase() === activeFilter.toLowerCase()
         )
+    )
+    .filter(event =>
+        event.title_en?.toLowerCase().includes(search.toLowerCase()) ||
+        event.title_ar?.toLowerCase().includes(search.toLowerCase()) ||
+        event.location_en?.toLowerCase().includes(search.toLowerCase())
     );
-
     const categories = ["All", "Music", "Conference", "Food", "Art", "Sports", "Technology"];
 
     
@@ -118,14 +125,8 @@ const filteredEvents = activeFilter === "All"
                     </div>
 
                     <div className="filter">
-                        <div className="searchbar">
-                        <img src={searchIcon} alt="" />
-                        <input
-                            type="text"
-                            placeholder="Search events..."
-                            
-                        />
-                        </div>
+                        <SearchBar type="text" placeholder="Search events..." value={search} onChange={setSearch}/>
+    
                         <div className="filterbtns">
                             {categories.map(cat => (
                                 <Filterbtn

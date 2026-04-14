@@ -10,12 +10,16 @@ import Filterbtn from '../components/filterbtn';
 import star from "../assets/star.svg"
 import del from "../assets/delete.svg";
 import burger from "../assets/burger.svg";
+import SearchBar from '../components/search';
+
 
 
 const Feedback = () => {
         const [activeFilter, setActiveFilter] = useState("All");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [feedback, setFeedback] = useState([" "]); 
+    const [search, setSearch] = useState("");  
+    
         
             useEffect(()=> {
                 const getFeedback = async() => {
@@ -35,7 +39,14 @@ const Feedback = () => {
         const filteredFeedback = feedback.filter((item) => {
         if (activeFilter === "All") return true;
         return item.rating === Number(activeFilter);
-        });
+        })
+        .filter(feedback =>
+        feedback.users?.full_name_en.toLowerCase().includes(search.toLowerCase()) ||
+        feedback.events?.title_en?.toLowerCase().includes(search.toLowerCase()) ||
+        feedback.events?.title_ar?.toLowerCase().includes(search.toLowerCase()) ||
+        feedback.comment_en?.toLowerCase().includes(search.toLowerCase()) ||
+        feedback.comment_ar?.toLowerCase().includes(search.toLowerCase()) 
+    );
         const rating = ["All", 1, 2, 3, 4, 5];
 
         
@@ -65,14 +76,7 @@ const Feedback = () => {
                     </div>
 
                     <div className="filter">
-                        <div className="searchbar">
-                        <img src={searchIcon} alt="" />
-                        <input
-                            type="text"
-                            placeholder="Search feedback..."
-                            
-                        />
-                        </div>
+                        <SearchBar type="text" placeholder="Search users..." value={search} onChange={setSearch}/>
                         <div className="filterbtns">
                             {rating.map((rat) => (
                                 <Filterbtn

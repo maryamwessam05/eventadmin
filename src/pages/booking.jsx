@@ -2,17 +2,21 @@ import React, { useEffect , useState } from 'react';
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
-import searchIcon from "../assets/search.svg";
 import "./booking.css";
 import "./dashboard.css";
 import {supabase} from "../supabase"
 import Filterbtn from '../components/filterbtn';
 import burger from "../assets/burger.svg";
+import SearchBar from '../components/search';
+
+
 
 const Booking = () => {
     const [activeFilter, setActiveFilter] = useState("All");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [bookings, setBookings] = useState([]); 
+        const [search, setSearch] = useState("");  
+    
     
     
 useEffect(() => {
@@ -69,7 +73,11 @@ useEffect(() => {
 const filteredBookings = bookings.filter((booking) => {
     if (activeFilter === "All") return true;
     return booking.booking_status?.toLowerCase() === activeFilter;
-});
+})
+.filter(booking =>
+        booking.users?.full_name_en?.toLowerCase().includes(search.toLowerCase()) ||
+        booking.events?.title_en?.toLowerCase().includes(search.toLowerCase()) 
+    );
 
 const filters = [
     { label: "All", value: "All" },
@@ -77,6 +85,8 @@ const filters = [
     { label: "Pending", value: "pending" },
     { label: "Cancelled", value: "cancelled" }
 ];
+
+
 
     return ( 
         <>
@@ -104,14 +114,8 @@ const filters = [
                     </div>
 
                     <div className="filter">
-                        <div className="searchbar">
-                        <img src={searchIcon} alt="" />
-                        <input
-                            type="text"
-                            placeholder="Search by user or event..."
-                            
-                        />
-                        </div>
+                     <SearchBar type="text" placeholder="Search bookings..." value={search} onChange={setSearch}/>
+
                         <div className="filterbtns">
                             {filters.map((filter) => (
                                 <Filterbtn
@@ -134,7 +138,7 @@ const filters = [
                                                 <th style={{paddingRight: "30px"}}>Reference</th>
                                                 <th>Ticket Quantity</th>
                                                 <th>Total Price</th>
-                                                <th style={{paddingRight: "30px"}}>Status</th>
+                                                <th style={{paddingRight: "90px"}}>Status</th>
                                                 <th style={{paddingRight: "30px"}}>Payment Status</th>
                                                 <th style={{paddingRight: "46px"}}>Actions</th>
                                             </tr>

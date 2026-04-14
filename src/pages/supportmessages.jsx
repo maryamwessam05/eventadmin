@@ -11,12 +11,16 @@ import Filterbtn from '../components/filterbtn';
 import check from "../assets/check.svg"
 import "./supportmessages.css"
 import burger from "../assets/burger.svg";
+import SearchBar from '../components/search';
+
 
 const SupportMessages = () => {
     const [activeFilter, setActiveFilter] = useState("All");
     
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [supportmsgs, setSupportMsgs] = useState([" "]); 
+    const [supportmsgs, setSupportMsgs] = useState([" "]);
+    const [search, setSearch] = useState("");  
+     
         
             useEffect(()=> {
                 const getSupportMsgs = async() => {
@@ -36,7 +40,17 @@ const SupportMessages = () => {
         const filteredSupp = supportmsgs.filter((support) => {
             if (activeFilter === "All") return true;
             return support.status?.toLowerCase() === activeFilter.toLowerCase();
-        });
+        })
+        .filter(support =>
+        support.users?.full_name_en?.toLowerCase().includes(search.toLowerCase()) ||
+        support.users?.email?.toLowerCase().includes(search.toLowerCase()) ||
+        support.subject_en?.toLowerCase().includes(search.toLowerCase()) || 
+        support.subject_ar?.toLowerCase().includes(search.toLowerCase()) || 
+        support.message_en?.toLowerCase().includes(search.toLowerCase()) || 
+        support.message_ar?.toLowerCase().includes(search.toLowerCase()) 
+
+
+    );
             const status = ["All", "Closed", "Open"];
 
     const updateSupportStatus = async (id, currentStatus) => {
@@ -86,14 +100,8 @@ const SupportMessages = () => {
                     </div>
 
                     <div className="filter">
-                        <div className="searchbar">
-                        <img src={searchIcon} alt="" />
-                        <input
-                            type="text"
-                            placeholder="Search messages..."
-                            
-                        />
-                        </div>
+                      <SearchBar type="text" placeholder="Search messages..." value={search} onChange={setSearch}/>
+
                         <div className="filterbtns">
                             {status.map((stat) => (
                                 <Filterbtn

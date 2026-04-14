@@ -35,8 +35,7 @@ justify-content: center;
 align-items: center;
 border-radius: 20px;
 background: #DCFCE7;
-    margin-right: 30px;
-    margin-top: 19px;
+   
     text-transform: capitalize;
 }
 
@@ -52,10 +51,10 @@ height: 25.705px;
 padding: 2.995px 11.175px 2.71px 11.994px;
 justify-content: center;
 align-items: center;
-    margin-right: 30px;
+
 border-radius: 20px;
 background: #FEF9C2;
-    margin-top: 19px;
+   
     text-transform: capitalize;
 }
 
@@ -73,8 +72,7 @@ justify-content: center;
 align-items: center;
 border-radius: 20px;
 background: #EF44441A;
-    margin-top: 19px;
-    margin-right: 30px;
+ 
     text-transform: capitalize;
 }
 td{
@@ -82,5 +80,5 @@ td{
 }
 
 .selectbooking{
-    width: 106px;
+    width: 106px !important;
 }
