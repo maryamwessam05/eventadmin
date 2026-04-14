@@ -13,6 +13,8 @@ import "./supportmessages.css"
 import burger from "../assets/burger.svg";
 
 const SupportMessages = () => {
+    const [activeFilter, setActiveFilter] = useState("All");
+    
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [supportmsgs, setSupportMsgs] = useState([" "]); 
         
@@ -31,6 +33,33 @@ const SupportMessages = () => {
     
             console.log(res);
         }
+        const filteredSupp = supportmsgs.filter((support) => {
+            if (activeFilter === "All") return true;
+            return support.status?.toLowerCase() === activeFilter.toLowerCase();
+        });
+            const status = ["All", "Closed", "Open"];
+
+    const updateSupportStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === "open" ? "closed" : "open";
+
+    const { error } = await supabase
+        .from("support_messages")
+        .update({ status: newStatus })
+        .eq("support_id", id);
+
+    if (!error) {
+        setSupportMsgs(prev =>
+            prev.map(item =>
+                item.support_id === id
+                    ? { ...item, status: newStatus }
+                    : item
+            )
+        );
+    } else {
+        console.log(error);
+    }
+};
+
     return ( 
         <>
         <main>
@@ -66,14 +95,19 @@ const SupportMessages = () => {
                         />
                         </div>
                         <div className="filterbtns">
-                            <Filterbtn style="clicked" text="All" />
-                            <Filterbtn style="disabeled" text="Pending" />
-                            <Filterbtn style="disabeled" text="Resolved" />
+                            {status.map((stat) => (
+                                <Filterbtn
+                                    key={stat}
+                                    text={stat}
+                                    style={activeFilter === stat ? "clicked" : "disabeled"}
+                                    onClick={() => setActiveFilter(stat)}
+                                />
+                            ))}
                         </div>
                     </div>
 
                 <div className="categcont">
-                    {supportmsgs.map((support)=>{
+                    {filteredSupp.map((support)=>{
                         return (
                             <div key={support.support_id} className="sup">
                                 <div className="row1sup">
@@ -107,9 +141,16 @@ const SupportMessages = () => {
                                 <div className="events">
                                     <span>{support.updated_at}</span>
                                     <div className="action-btns">
-                                        <button className="edit">
-                                        <img src={check} alt="Edit" />
+                                        {support.status?.toLowerCase() !== "closed" && (
+                                        <button
+                                            onClick={() =>
+                                                updateSupportStatus(support.support_id, support.status)
+                                            }
+                                            className="check"
+                                        >
+                                            <img src={check} alt="Close" />
                                         </button>
+                                    )}
                                         <button onClick={()=>deleteSuppmsg(support.support_id)} className="delete">
                                         <img src={del} alt="Delete" />
                                         </button>

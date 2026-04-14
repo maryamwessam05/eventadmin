@@ -13,6 +13,7 @@ import burger from "../assets/burger.svg";
 
 
 const Feedback = () => {
+        const [activeFilter, setActiveFilter] = useState("All");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [feedback, setFeedback] = useState([" "]); 
         
@@ -31,6 +32,13 @@ const Feedback = () => {
     
             console.log(res);
         }
+        const filteredFeedback = feedback.filter((item) => {
+        if (activeFilter === "All") return true;
+        return item.rating === Number(activeFilter);
+        });
+        const rating = ["All", 1, 2, 3, 4, 5];
+
+        
     return ( 
         <>
         <main>
@@ -66,12 +74,14 @@ const Feedback = () => {
                         />
                         </div>
                         <div className="filterbtns">
-                            <Filterbtn style="clicked" text="All"/>
-                            <Filterbtn style="disabeled" text="5" icon={star} />
-                            <Filterbtn style="disabeled" text="4" icon={star} />
-                            <Filterbtn style="disabeled" text="3" icon={star} />
-                            <Filterbtn style="disabeled" text="2" icon={star} />
-                            <Filterbtn style="disabeled" text="1" icon={star} />
+                            {rating.map((rat) => (
+                                <Filterbtn
+                                    key={rat}
+                                    text={rat}
+                                    style={activeFilter === rat ? "clicked" : "disabeled"}
+                                    onClick={() => setActiveFilter(rat)}
+                                />
+                            ))}
                         </div>
 
                     </div>
@@ -82,17 +92,17 @@ const Feedback = () => {
                         <tr>
                             <th></th>
                             <th style={{paddingRight: "86px"}}>User</th>
-                            <th style={{paddingRight: "30px"}}>Event EN</th>
+                            <th style={{paddingRight: "100px"}}>Event EN</th>
                             <th style={{paddingRight: "56px"}}>Event AR</th>
                             <th style={{paddingRight: "56px"}}>Rating</th>
-                            <th style={{paddingRight: "56px"}}>Comment EN</th>
-                            <th style={{paddingRight: "56px"}}>Comment AR</th>
+                            <th style={{paddingRight: "106px"}}>Comment EN</th>
+                            <th style={{paddingRight: "106px"}}>Comment AR</th>
                             <th>Date&Time</th>
                             <th style={{paddingRight: "46px"}}>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {feedback.map((feedback) => {
+                        {filteredFeedback.map((feedback) => {
                             return (
                             <tr key={feedback.id}>
                                 <td>
@@ -106,8 +116,8 @@ const Feedback = () => {
                                     {feedback.rating}
                                         </div>
                                     </td>
-                                <td>{feedback.comment_en}</td>
-                                <td>{feedback.comment_ar}</td>
+                                <td><div className="desc-cell">{feedback.comment_en}</div></td>
+                                <td><div className="desc-cell">{feedback.comment_ar}</div></td>
                                 <td>{feedback.updated_at}</td>
                                <td>
                                     <button onClick={()=>deleteFeedback(feedback.id)} className="delete">

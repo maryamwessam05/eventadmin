@@ -10,12 +10,13 @@ import Filterbtn from '../components/filterbtn';
 import burger from "../assets/burger.svg";
 
 const Booking = () => {
-            const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [activeFilter, setActiveFilter] = useState("All");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [bookings, setBookings] = useState([]); 
     
     
 useEffect(() => {
-    const getEvents = async () => {
+    const getBooking = async () => {
         const { data, error } = await supabase.from("bookings")
             .select(`booking_id, booking_reference, ticket_quantity, total_price, booking_status, payment_status, booked_at,
                 users ( full_name_en ),
@@ -27,7 +28,7 @@ useEffect(() => {
 
         setBookings(data ?? []); 
     };
-    getEvents();
+    getBooking();
 }, []);
 
     const getStatusClass = (status) => {
@@ -45,6 +46,37 @@ useEffect(() => {
 
         console.log(res);
     }
+
+    const updateBookingStatus = async (id, newStatus) => {
+    const { error } = await supabase
+        .from("bookings")
+        .update({ booking_status: newStatus })
+        .eq("booking_id", id);
+
+    if (!error) {
+        setBookings(prev =>
+            prev.map(b =>
+                b.booking_id === id
+                    ? { ...b, booking_status: newStatus }
+                    : b
+            )
+        );
+    } else {
+        console.log(error);
+    }
+
+};
+const filteredBookings = bookings.filter((booking) => {
+    if (activeFilter === "All") return true;
+    return booking.booking_status?.toLowerCase() === activeFilter;
+});
+
+const filters = [
+    { label: "All", value: "All" },
+    { label: "Confirmed", value: "confirmed" },
+    { label: "Pending", value: "pending" },
+    { label: "Cancelled", value: "cancelled" }
+];
 
     return ( 
         <>
@@ -81,10 +113,14 @@ useEffect(() => {
                         />
                         </div>
                         <div className="filterbtns">
-                            <Filterbtn style="clicked" text="All" />
-                            <Filterbtn style="disabeled" text="Confirmed" />
-                            <Filterbtn style="disabeled" text="Pending" />
-                            <Filterbtn style="disabeled" text="Cancelled" />
+                            {filters.map((filter) => (
+                                <Filterbtn
+                                    key={filter.value}
+                                    style={activeFilter === filter.value ? "clicked" : "disabeled"}
+                                    text={filter.label}
+                                    onClick={() => setActiveFilter(filter.value)}
+                                />
+                            ))}
                         </div>
                     </div>
 
@@ -104,7 +140,7 @@ useEffect(() => {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {bookings.map((booking) => {
+                                            {filteredBookings.map((booking) => {
                                                 return (
                                                 <tr key={booking.booking_id}>
                                                     
@@ -113,7 +149,19 @@ useEffect(() => {
                                                     <td>{booking.booking_reference}</td>
                                                     <td>{booking.ticket_quantity}</td>
                                                     <td>{booking.total_price}</td>
-                                                    <td className={getStatusClass(booking.booking_status)}>{booking.booking_status}</td>
+                                                    <td className='selectbooking'>
+                                                        <select
+                                                            value={booking.booking_status || ""}
+                                                            onChange={(e) =>
+                                                                updateBookingStatus(booking.booking_id, e.target.value)
+                                                            }
+                                                            className={getStatusClass(booking.booking_status)}
+                                                        >
+                                                            <option value="confirmed">Confirmed</option>
+                                                            <option value="pending">Pending</option>
+                                                            <option value="cancelled">Cancelled</option>
+                                                        </select>
+                                                    </td>
                                                     <td className={getStatusClass(booking.payment_status)}>{booking.payment_status}</td>
                                                     <td onClick={()=>deleteBooking(booking.booking_id)} ><span className='deletebtn'>Delete</span></td>
                     
