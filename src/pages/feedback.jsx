@@ -9,8 +9,11 @@ import "./dashboard.css";
 import Filterbtn from '../components/filterbtn';
 import star from "../assets/star.svg"
 import del from "../assets/delete.svg";
+import burger from "../assets/burger.svg";
+
 
 const Feedback = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [feedback, setFeedback] = useState([" "]); 
         
             useEffect(()=> {
@@ -31,17 +34,22 @@ const Feedback = () => {
     return ( 
         <>
         <main>
-            <div className="sidenav">
-            <Sidebar /> 
-
+            <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+            <Sidebar onClose={() => setSidebarOpen(false)} /> 
             </div>
             <div className="content">
                 <div className="header">
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="burger">
+                        <img src={burger} alt="" />
+                    </button>
+                    <div className="headaction">
+
                     <div className="language">
                         <div className="selected">EN</div>
                         <div className="unactive">AR</div>
                     </div>
                     <img src={notif} alt="" />
+                    </div>
                 </div>
                 <div className="maincont">
                     <div className="headercont">

@@ -5,6 +5,7 @@ import Title from '../components/title';
 import searchIcon from "../assets/search.svg";
 import "./events.css";
 import "./dashboard.css";
+import burger from "../assets/burger.svg"
 import Filterbtn from '../components/filterbtn';
 import edit from "../assets/edit.svg";
 import del from "../assets/delete.svg";
@@ -13,11 +14,22 @@ import {supabase} from "../supabase"
 import AddModal from '../modals/addmodal';
 
 const Events = () => {
+    const [activeFilter, setActiveFilter] = useState("All");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [events, setEvents] = useState([" "]); 
 
     useEffect(()=> {
         const getEvents = async() => {
-            const res = await supabase.from("events").select("*");
+            const res = await supabase.from("events").select(`
+            *,
+            event_categories (
+            category_id,
+            categories (
+                title_en,
+                title_ar
+            )
+            )
+        `);
             setEvents(res.data);
         }
         getEvents();
@@ -55,13 +67,23 @@ const openModal = (event) => {
     setEvents(prev => prev.filter(event => event.event_id !== id));
     
 }
+
+const filteredEvents = activeFilter === "All"
+    ? events
+    : events.filter(event =>
+        event.event_categories?.some(
+            ec => ec.categories?.title_en?.toLowerCase() === activeFilter.toLowerCase()
+        )
+    );
+
+    const categories = ["All", "Music", "Conference", "Food", "Art", "Sports", "Technology"];
+
     
     return ( 
         <>
         <main>
-            <div className="sidenav">
-            <Sidebar /> 
-
+            <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+            <Sidebar onClose={() => setSidebarOpen(false)} /> 
             </div>
             <EditModal 
     type="event" 
@@ -77,12 +99,17 @@ const openModal = (event) => {
                 onEventAdded={(newEvent) => setEvents(prev => [...prev, newEvent])} 
             />          <div className="content">
                 <div className="header">
-                    
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="burger">
+                        <img src={burger} alt="" />
+                    </button>
+                    <div className="headaction">
+
                     <div className="language">
                         <div className="selected">EN</div>
                         <div className="unactive">AR</div>
                     </div>
                     <img src={notif} alt="" />
+                    </div>
                 </div>
                 <div className="maincont">
                     <div className="headercont">
@@ -100,12 +127,14 @@ const openModal = (event) => {
                         />
                         </div>
                         <div className="filterbtns">
-                            <Filterbtn style="clicked" text="All" />
-                            <Filterbtn style="disabeled" text="Music" />
-                            <Filterbtn style="disabeled" text="Conference" />
-                            <Filterbtn style="disabeled" text="Food" />
-                            <Filterbtn style="disabeled" text="Art" />
-                            <Filterbtn style="disabeled" text="Sports" />
+                            {categories.map(cat => (
+                                <Filterbtn
+                                    key={cat}
+                                    text={cat}
+                                    style={activeFilter === cat ? "clicked" : "disabeled"}
+                                    onClick={() => setActiveFilter(cat)}
+                                />
+                            ))}
                         </div>
                     </div>
 
@@ -119,6 +148,7 @@ const openModal = (event) => {
                             <th style={{paddingRight: "56px"}}>Title AR</th>
                             <th style={{paddingRight: "30px"}}>Description EN</th>
                             <th style={{paddingRight: "56px"}}>Description AR</th>
+                            <th>Category</th>
                             <th>Location EN</th>
                             <th>Location AR</th>
                             <th style={{paddingRight: "46px"}}>Venue EN</th>
@@ -135,7 +165,7 @@ const openModal = (event) => {
                         </tr>
                         </thead>
                         <tbody>
-                        {events.map((event) => {
+                        {filteredEvents.map((event) => {
                             return (
                             <tr key={event.event_id}>
                                 <td>
@@ -143,8 +173,11 @@ const openModal = (event) => {
                                 </td>
                                 <td>{event.title_en}</td>
                                 <td>{event.title_ar}</td>
-                                <td>{event.description_en}</td>
-                                <td >{event.description_ar}</td>
+                                <td><div className="desc-cell">{event.description_en}</div></td>
+                                <td><div className="desc-cell">{event.description_ar}</div></td>
+                                <td>
+                                {event.event_categories?.map(ec => ec.categories?.title_en).join(", ") || "—"}
+                                </td>
                                 <td>{event.location_en}</td>
                                 <td>{event.location_ar}</td>
                                 <td>{event.venue_en}</td>

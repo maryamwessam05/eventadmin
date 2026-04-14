@@ -7,10 +7,12 @@ import "./dashboard.css";
 import {supabase} from "../supabase"
 import AddModal from '../modals/addmodal';
 import EditModal from '../modals/editmodal';
+import burger from "../assets/burger.svg"
 import del from "../assets/delete.svg";
 import edit from "../assets/edit.svg";
 
 const Categories = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [categories, setCategories] = useState([" "]); 
     
         useEffect(()=> {
@@ -21,6 +23,8 @@ const Categories = () => {
             getCategories();
     
         },[])
+            const [selectedCategory, setselectedCategory] = useState(null);
+        
     const openModal = () => {
         const modal = document.querySelector(".addmodal");
         modal.style.display = "flex";
@@ -40,20 +44,32 @@ const Categories = () => {
     return ( 
         <>
         <main>
-            <div className="sidenav">
-            <Sidebar /> 
-
+            <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+            <Sidebar onClose={() => setSidebarOpen(false)} /> 
             </div>
-            <EditModal type="category" modalname="Category" />
+            <EditModal 
+    type="category" 
+    modalname="Category" 
+    data={selectedCategory}
+    onEventUpdated={(updatedCategory) => setCategories(prev => 
+    prev.map(e => e.category_id === updatedCategory.category_id ? updatedCategory : e)
+)}
+/>
 
            <AddModal type="category" modalname="Category" onEventAdded={(newCategory) => setCategories(prev => [...prev, newCategory])} />
             <div className="content">
                 <div className="header">
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="burger">
+                        <img src={burger} alt="" />
+                    </button>
+                    <div className="headaction">
+
                     <div className="language">
                         <div className="selected">EN</div>
                         <div className="unactive">AR</div>
                     </div>
                     <img src={notif} alt="" />
+                    </div>
                 </div>
                 <div className="maincont">
                     <div className="headercont">
@@ -70,7 +86,7 @@ const Categories = () => {
                                         <img src={category.image_url} alt="" />
                                     </div>
                                     <div className="action-btns">
-                                        <button onClick={openeditModal} className="edit">
+                                        <button onClick={() => { setselectedCategory(category); openeditModal(); }} className="edit">
                                         <img src={edit} alt="Edit" />
                                         </button>
                                         <button onClick={()=>deleteCategory(category.category_id)}  className="delete">

@@ -113,6 +113,12 @@ font-style: normal;
 font-weight: 500;
 line-height: 20px; /* 142.857% */
 }
+.burger{
+    outline: none;
+    border: none;
+    background-color: white;
+    display: none;
+}
 @media (max-width: 1060px) {
 .content{
     width: 100%;

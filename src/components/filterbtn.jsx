@@ -4,8 +4,7 @@ import "./filterbtn.css";
 const Filterbtn = (props) => {
     return ( 
         <>
-        <button className={props.style}>
-            <img src={props.icon} alt="" />
+        <button className={`filterbtn ${props.style}`} onClick={props.onClick}>
             {props.text}
         </button>
         

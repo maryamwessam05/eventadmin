@@ -98,6 +98,9 @@ gap: 13px;
 flex-wrap: wrap;
 width: 100%;
 }
+.statcards img{
+    width: 3vw;
+}
 
 .tableheader{
     display: flex;

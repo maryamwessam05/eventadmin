@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./editmodal.css";
 import { supabase } from "../supabase";
 
@@ -18,12 +18,28 @@ const AddModal = (props) => {
     const [availableTickets, setAvailableTickets] = useState("");
     const [status, setStatus] = useState("upcoming");
     const [image, setImage] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        const getCategories = async () => {
+            const { data } = await supabase.from("categories").select("category_id, title_en");
+            setCategories(data || []);
+        };
+        if (props.type === "event") getCategories();
+    }, [props.type]);
 
     const closeModal = () => {
         const modal = document.querySelector(".addmodal");
         modal.style.display = "none";
-    }
+    };
+
+    const toggleCategory = (id) => {
+        setSelectedCategories(prev =>
+            prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+        );
+    };
 
     const validate = () => {
         const newErrors = {};
@@ -43,11 +59,12 @@ const AddModal = (props) => {
             if (!venueAr) newErrors.venueAr = "Venue (AR) is required";
             if (!capacity) newErrors.capacity = "Capacity is required";
             if (!availableTickets) newErrors.availableTickets = "Available Tickets is required";
+            if (selectedCategories.length === 0) newErrors.categories = "Select at least one category";
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-    }
+    };
 
     const resetForm = () => {
         setNameEn(""); setNameAr("");
@@ -59,8 +76,9 @@ const AddModal = (props) => {
         setCapacity(""); setAvailableTickets("");
         setStatus("upcoming");
         setImage(null);
+        setSelectedCategories([]);
         setErrors({});
-    }
+    };
 
     const handleSubmit = async () => {
         const isValid = validate();
@@ -76,69 +94,80 @@ const AddModal = (props) => {
 
             if (uploadError) { console.error("Upload error:", uploadError); return; }
 
-            const { data: urlData } = supabase.storage.from("event_imgs").getPublicUrl(`event_imgs/${fileName}`);
+            const { data: urlData } = supabase.storage
+                .from("event_imgs")
+                .getPublicUrl(`event_imgs/${fileName}`);
 
             const { data, error } = await supabase.from("events").insert({
                 title_en: nameEn,
                 title_ar: nameAr,
                 description_en: descriptionEn,
                 description_ar: descriptionAr,
-                date: date,
-                time: time,
-                price: price,
+                date, time, price,
                 location_en: locationEn,
                 location_ar: locationAr,
                 venue_en: venueEn,
                 venue_ar: venueAr,
-                capacity: capacity,
+                capacity,
                 available_tickets: availableTickets,
-                status: status,
+                status,
+                image_url: urlData.publicUrl,
+            }).select().single();
+
+            if (error) { console.error("Insert error:", error); return; }
+
+            if (selectedCategories.length > 0) {
+                const categoryRows = selectedCategories.map(category_id => ({
+                    event_id: data.event_id,
+                    category_id,
+                }));
+                const { error: catError } = await supabase.from("event_categories").insert(categoryRows);
+                if (catError) console.error("Category insert error:", catError);
+            }
+
+            if (props.onEventAdded) props.onEventAdded(data);
+
+        } else if (props.type === "category") {
+            const fileExt = image.name.split('.').pop();
+            const fileName = `${Date.now()}.${fileExt}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from("category_imgs")
+                .upload(`category_imgs/${fileName}`, image);
+
+            if (uploadError) { console.error("Upload error:", uploadError); return; }
+
+            const { data: urlData } = supabase.storage
+                .from("category_imgs")
+                .getPublicUrl(`category_imgs/${fileName}`);
+
+            const { data, error } = await supabase.from("categories").insert({
+                title_en: nameEn,
+                title_ar: nameAr,
+                description_en: descriptionEn,
+                description_ar: descriptionAr,
                 image_url: urlData.publicUrl,
             }).select().single();
 
             if (error) { console.error("Insert error:", error); return; }
 
             if (props.onEventAdded) props.onEventAdded(data);
-
-       } else if (props.type === "category") {
-        const fileExt = image.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
-
-    const { error: uploadError } = await supabase.storage
-        .from("category_imgs")
-        .upload(`category_imgs/${fileName}`, image);
-
-    if (uploadError) { console.error("Upload error:", uploadError); return; }
-
-    const { data: urlData } = supabase.storage.from("category_imgs").getPublicUrl(`category_imgs/${fileName}`);
-
-    const { data, error } = await supabase.from("categories").insert({
-        title_en: nameEn,
-        title_ar: nameAr,
-        description_en: descriptionEn,
-        description_ar: descriptionAr,
-        image_url: urlData.publicUrl,
-    }).select().single();
-
-    if (error) { console.error("Insert error:", error); return; }
-
-    if (props.onEventAdded) props.onEventAdded(data);
-    }
+        }
 
         resetForm();
         closeModal();
-    }
+    };
 
     return (
-        <>
         <div className="addmodal">
             <div className="editcont">
                 <h1>Add {props.modalname}</h1>
                 <form>
+                    {/* Name Row */}
                     <div className="formrow">
                         <div className="grp">
-                            <label>{props.modalname} Name</label>
-                            <input type="text" placeholder={`${props.modalname} Name`}
+                            <label>{props.modalname} Name (EN)</label>
+                            <input type="text" placeholder={`${props.modalname} Name EN`}
                                 value={nameEn} onChange={(e) => setNameEn(e.target.value)} />
                             {errors.nameEn && <span className="error">{errors.nameEn}</span>}
                         </div>
@@ -150,54 +179,45 @@ const AddModal = (props) => {
                         </div>
                     </div>
 
-                    {props.type === "category" && (
-                        <>
-                            <div className="formrow">
-                                <div className="grp">
-                                    <label>Description</label>
-                                    <textarea placeholder='Description (EN)'
-                                        value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} />
-                                    {errors.descriptionEn && <span className="error">{errors.descriptionEn}</span>}
-                                </div>
-                                <div className="grp">
-                                    <label>Description (AR)</label>
-                                    <textarea placeholder='Description (AR)'
-                                        value={descriptionAr} onChange={(e) => setDescriptionAr(e.target.value)} />
-                                    {errors.descriptionAr && <span className="error">{errors.descriptionAr}</span>}
-                                </div>
-                            </div>
-                            <div className="formrow">
-                                <div className="grp">
-                                    <label>Image</label>
-                                    <input type="file" accept="image/*"
-                                        onChange={(e) => setImage(e.target.files[0])} />
-                                    {errors.image && <span className="error">{errors.image}</span>}
-                                </div>
-                            </div>
-                        </>
-                    )}
+                    {/* Description Row */}
+                    <div className="formrow">
+                        <div className="grp">
+                            <label>Description (EN)</label>
+                            <textarea placeholder="Description EN"
+                                value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} />
+                            {errors.descriptionEn && <span className="error">{errors.descriptionEn}</span>}
+                        </div>
+                        <div className="grp">
+                            <label>Description (AR)</label>
+                            <textarea placeholder="Description AR"
+                                value={descriptionAr} onChange={(e) => setDescriptionAr(e.target.value)} />
+                            {errors.descriptionAr && <span className="error">{errors.descriptionAr}</span>}
+                        </div>
+                    </div>
 
+                    {/* Event-only fields */}
                     {props.type === "event" && (
                         <>
                             <div className="formrow">
                                 <div className="grp">
                                     <label>Date</label>
-                                    <input type="date"
-                                        value={date} onChange={(e) => setDate(e.target.value)} />
+                                    <input type="date" value={date}
+                                        onChange={(e) => setDate(e.target.value)} />
                                     {errors.date && <span className="error">{errors.date}</span>}
                                 </div>
                                 <div className="grp">
                                     <label>Time</label>
-                                    <input type="time"
-                                        value={time} onChange={(e) => setTime(e.target.value)} />
+                                    <input type="time" value={time}
+                                        onChange={(e) => setTime(e.target.value)} />
                                     {errors.time && <span className="error">{errors.time}</span>}
                                 </div>
                             </div>
+
                             <div className="formrow">
                                 <div className="grp">
                                     <label>Price ($)</label>
-                                    <input type="number" placeholder='0.00$'
-                                        value={price} onChange={(e) => setPrice(e.target.value)} />
+                                    <input type="number" placeholder="0.00" value={price}
+                                        onChange={(e) => setPrice(e.target.value)} />
                                     {errors.price && <span className="error">{errors.price}</span>}
                                 </div>
                                 <div className="grp">
@@ -211,82 +231,92 @@ const AddModal = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="formrow">
-                                <div className="grp">
-                                    <label>Description (EN)</label>
-                                    <textarea placeholder='Description'
-                                        value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} />
-                                    {errors.descriptionEn && <span className="error">{errors.descriptionEn}</span>}
-                                </div>
-                                <div className="grp">
-                                    <label>Description (AR)</label>
-                                    <textarea placeholder='Description (AR)'
-                                        value={descriptionAr} onChange={(e) => setDescriptionAr(e.target.value)} />
-                                    {errors.descriptionAr && <span className="error">{errors.descriptionAr}</span>}
-                                </div>
-                            </div>
+
                             <div className="formrow">
                                 <div className="grp">
                                     <label>Location (EN)</label>
-                                    <input type="text" placeholder='Location EN'
-                                        value={locationEn} onChange={(e) => setLocationEn(e.target.value)} />
+                                    <input type="text" placeholder="Location EN" value={locationEn}
+                                        onChange={(e) => setLocationEn(e.target.value)} />
                                     {errors.locationEn && <span className="error">{errors.locationEn}</span>}
                                 </div>
                                 <div className="grp">
                                     <label>Location (AR)</label>
-                                    <input type="text" placeholder='Location AR'
-                                        value={locationAr} onChange={(e) => setLocationAr(e.target.value)} />
+                                    <input type="text" placeholder="Location AR" value={locationAr}
+                                        onChange={(e) => setLocationAr(e.target.value)} />
                                     {errors.locationAr && <span className="error">{errors.locationAr}</span>}
                                 </div>
                             </div>
+
                             <div className="formrow">
                                 <div className="grp">
                                     <label>Venue (EN)</label>
-                                    <input type="text" placeholder='Venue EN'
-                                        value={venueEn} onChange={(e) => setVenueEn(e.target.value)} />
+                                    <input type="text" placeholder="Venue EN" value={venueEn}
+                                        onChange={(e) => setVenueEn(e.target.value)} />
                                     {errors.venueEn && <span className="error">{errors.venueEn}</span>}
                                 </div>
                                 <div className="grp">
                                     <label>Venue (AR)</label>
-                                    <input type="text" placeholder='Venue AR'
-                                        value={venueAr} onChange={(e) => setVenueAr(e.target.value)} />
+                                    <input type="text" placeholder="Venue AR" value={venueAr}
+                                        onChange={(e) => setVenueAr(e.target.value)} />
                                     {errors.venueAr && <span className="error">{errors.venueAr}</span>}
                                 </div>
                             </div>
+
                             <div className="formrow">
                                 <div className="grp">
                                     <label>Capacity</label>
-                                    <input type="number" placeholder='Capacity'
-                                        value={capacity} onChange={(e) => setCapacity(e.target.value)} />
+                                    <input type="number" placeholder="Capacity" value={capacity}
+                                        onChange={(e) => setCapacity(e.target.value)} />
                                     {errors.capacity && <span className="error">{errors.capacity}</span>}
                                 </div>
                                 <div className="grp">
                                     <label>Available Tickets</label>
-                                    <input type="number" placeholder='Available Tickets'
-                                        value={availableTickets} onChange={(e) => setAvailableTickets(e.target.value)} />
+                                    <input type="number" placeholder="Available Tickets" value={availableTickets}
+                                        onChange={(e) => setAvailableTickets(e.target.value)} />
                                     {errors.availableTickets && <span className="error">{errors.availableTickets}</span>}
                                 </div>
                             </div>
+
+                            {/* Categories */}
                             <div className="formrow">
                                 <div className="grp">
-                                    <label>Image</label>
-                                    <input type="file" accept="image/*"
-                                        onChange={(e) => setImage(e.target.files[0])} />
-                                    {errors.image && <span className="error">{errors.image}</span>}
+                                    <label>Categories</label>
+                                    <div className="checkbox-group">
+                                        {categories.map(cat => (
+                                            <label key={cat.category_id} className="checkbox-label">
+                                                <input
+                                                    type="checkbox" className='checkboxinput'
+                                                    checked={selectedCategories.includes(cat.category_id)}
+                                                    onChange={() => toggleCategory(cat.category_id)}
+                                                />
+                                                {cat.title_en}
+                                            </label>
+                                        ))}
+                                    </div>
+                                    {errors.categories && <span className="error">{errors.categories}</span>}
                                 </div>
                             </div>
                         </>
                     )}
+
+                    {/* Image */}
+                    <div className="formrow">
+                        <div className="grp">
+                            <label>Image</label>
+                            <input type="file" accept="image/*"
+                                onChange={(e) => setImage(e.target.files[0])} />
+                            {errors.image && <span className="error">{errors.image}</span>}
+                        </div>
+                    </div>
                 </form>
 
                 <div className="actionbutton">
-                    <button className='cancel' onClick={closeModal}>Cancel</button>
-                    <button className='upload' onClick={handleSubmit}>Add {props.modalname}</button>
+                    <button className="cancel" onClick={closeModal}>Cancel</button>
+                    <button className="upload" onClick={handleSubmit}>Add {props.modalname}</button>
                 </div>
             </div>
         </div>
-        </>
     );
-}
+};
 
 export default AddModal;

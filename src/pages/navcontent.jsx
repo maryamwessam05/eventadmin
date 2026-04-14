@@ -8,9 +8,12 @@ import "./dashboard.css";
 import save from "../assets/save.svg"
 import {supabase} from "../supabase"
 import "./sitemanage.css"
+import burger from "../assets/burger.svg";
+
 
 
 const NavContent = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [siteNav, setSiteNav] = useState([" "]); 
     
     useEffect(()=> {
@@ -25,18 +28,23 @@ const NavContent = () => {
 return ( 
     <>
     <main>
-        <div className="sidenav">
-        <Sidebar /> 
-
+        <div className={`sidenav ${sidebarOpen ? "open" : ""}`}>
+            <Sidebar onClose={() => setSidebarOpen(false)} /> 
         </div>
         <div className="content">
             <div className="header">
-                <div className="language">
-                    <div className="selected">EN</div>
-                    <div className="unactive">AR</div>
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="burger">
+                        <img src={burger} alt="" />
+                    </button>
+                    <div className="headaction">
+
+                    <div className="language">
+                        <div className="selected">EN</div>
+                        <div className="unactive">AR</div>
+                    </div>
+                    <img src={notif} alt="" />
+                    </div>
                 </div>
-                <img src={notif} alt="" />
-            </div>
             <div className="maincont">
                 <div className="headercont">
                     <Title title="Navbar Management" description="Manage your site's navbar content and structure" />
