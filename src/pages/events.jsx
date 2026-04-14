@@ -2,7 +2,6 @@ import React, { useEffect , useState } from 'react';
 import Sidebar from '../components/sidebar';
 import notif from "../assets/notif.svg";
 import Title from '../components/title';
-import searchIcon from "../assets/search.svg";
 import "./events.css";
 import "./dashboard.css";
 import burger from "../assets/burger.svg"
